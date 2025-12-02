@@ -7,13 +7,26 @@ from typing import List, Dict, Any, Optional
 class VectorStore:
     def __init__(self, persist_path: str = "chroma_db"):
         """
-        Initialize ChromaDB client.
+        Initialize ChromaDB client with sentence-transformers embedding.
+        This avoids the onnxruntime dependency issue.
         """
         self.client = chromadb.PersistentClient(path=persist_path)
         
-        # Create or get collections
-        self.episodic = self.client.get_or_create_collection(name="episodic_memory")
-        self.semantic = self.client.get_or_create_collection(name="semantic_memory")
+        # Use sentence-transformers embedding function (more reliable)
+        from chromadb.utils import embedding_functions
+        sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name="all-MiniLM-L6-v2"
+        )
+        
+        # Create or get collections with explicit embedding function
+        self.episodic = self.client.get_or_create_collection(
+            name="episodic_memory",
+            embedding_function=sentence_transformer_ef
+        )
+        self.semantic = self.client.get_or_create_collection(
+            name="semantic_memory",
+            embedding_function=sentence_transformer_ef
+        )
         
         print(f"[VectorStore] Initialized at {persist_path}")
 

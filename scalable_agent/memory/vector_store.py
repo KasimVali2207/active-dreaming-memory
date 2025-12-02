@@ -40,11 +40,13 @@ class VectorStore:
     def query_episodic(self, query: str, n_results: int = 3, where: Optional[Dict] = None) -> List[Dict]:
         """
         Searches episodic memory.
+        Returns results with embeddings for clustering.
         """
         results = self.episodic.query(
             query_texts=[query],
             n_results=n_results,
-            where=where
+            where=where,
+            include=["documents", "metadatas", "distances", "embeddings"]
         )
         return self._format_results(results)
 
@@ -54,13 +56,15 @@ class VectorStore:
         """
         results = self.semantic.query(
             query_texts=[query],
-            n_results=n_results
+            n_results=n_results,
+            include=["documents", "metadatas", "distances"]
         )
         return self._format_results(results)
     
     def _format_results(self, results) -> List[Dict]:
         """
         Helper to format ChromaDB results into a clean list of dicts.
+        Includes embeddings for clustering.
         """
         formatted = []
         if not results['documents']:
@@ -70,7 +74,8 @@ class VectorStore:
             formatted.append({
                 "content": results['documents'][0][i],
                 "metadata": results['metadatas'][0][i],
-                "distance": results['distances'][0][i] if results['distances'] else None
+                "distance": results['distances'][0][i] if results['distances'] else None,
+                "embedding": results['embeddings'][0][i] if results.get('embeddings') else None
             })
         return formatted
 

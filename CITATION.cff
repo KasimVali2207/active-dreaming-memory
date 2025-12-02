@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Vali"
+    given-names: "Kasim"
+title: "Active Dreaming Memory: A Biologically-Inspired Dual-Store Memory System for Lifelong Learning"
+version: 1.0.0
+date-released: 2024-12-02
+url: "https://github.com/KasimVali2207/active-dreaming-memory"
+repository-code: "https://github.com/KasimVali2207/active-dreaming-memory"
+keywords:
+  - machine-learning
+  - lifelong-learning
+  - memory-systems
+  - large-language-models
+  - autonomous-agents
+  - python
+license: MIT
